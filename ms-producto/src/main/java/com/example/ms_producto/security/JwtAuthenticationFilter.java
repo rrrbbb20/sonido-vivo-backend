@@ -2,11 +2,15 @@
 package com.example.ms_producto.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtException;
+
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -29,43 +33,55 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain
     ) throws ServletException, IOException {
 
-        String authorizationHeader = request.getHeader("Authorization");
+        String header = request.getHeader("Authorization");
 
-        if (authorizationHeader == null
-                || !authorizationHeader.startsWith("Bearer ")) {
+        if (header != null && header.startsWith("Bearer ")) {
 
-            filterChain.doFilter(request, response);
-            return;
-        }
+            try {
+                // Extraer el token sin la palabra Bearer
+                String token = header.substring(7);
 
-        String token = authorizationHeader.substring(7);
+                // Validar el token y obtener sus datos
+                Claims claims = jwtService.validar(token);
 
-        if (jwtService.validarToken(token)) {
+                String correo = claims.getSubject();
+                String rol = claims.get("rol", String.class);
 
-            Claims claims = jwtService.obtenerClaims(token);
+                // Comprobar que el usuario tenga un rol permitido
+                if (correo != null && !correo.isBlank()
+                        && rol != null
+                        && (rol.equals("CLIENTE")
+                        || rol.equals("VENDEDOR")
+                        || rol.equals("ADMINISTRADOR"))) {
 
-            String correo = claims.getSubject();
-            String rol = claims.get("rol", String.class);
+                    // Convertir el rol al formato de Spring Security
+                    SimpleGrantedAuthority autoridad =
+                            new SimpleGrantedAuthority("ROLE_" + rol);
 
-            if (rol.equals("CLIENTE")
-                    || rol.equals("VENDEDOR")
-                    || rol.equals("ADMINISTRADOR")) {
+                    // Crear la autenticación del usuario
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    correo,
+                                    null,
+                                    List.of(autoridad)
+                            );
 
-                SimpleGrantedAuthority autoridad =
-                        new SimpleGrantedAuthority("ROLE_" + rol);
+                    // Registrar al usuario como autenticado
+                    SecurityContextHolder.getContext()
+                            .setAuthentication(authentication);
 
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(
-                                correo,
-                                null,
-                                List.of(autoridad)
-                        );
+                } else {
+                    SecurityContextHolder.clearContext();
+                }
 
-                SecurityContextHolder.getContext()
-                        .setAuthentication(authentication);
+            } catch (JwtException | IllegalArgumentException e) {
+
+                // Si el token es inválido, limpiar la autenticación
+                SecurityContextHolder.clearContext();
             }
         }
 
+        // Continuar con la siguiente etapa de seguridad
         filterChain.doFilter(request, response);
     }
 }

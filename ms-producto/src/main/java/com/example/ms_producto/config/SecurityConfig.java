@@ -1,16 +1,23 @@
 
-package com.example.ms_producto.security;
+package com.example.ms_producto.config;
 
-import jakarta.servlet.http.HttpServletResponse;
+
+import com.example.ms_producto.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
+
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -18,7 +25,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -28,78 +34,82 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
 
-        http
+        return http
+                // Desactivar CSRF para nuestra API REST
                 .csrf(csrf -> csrf.disable())
 
-                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                // Habilitar CORS
+                .cors(Customizer.withDefaults())
 
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                // No utilizar sesiones en el servidor
+                .sessionManagement(session ->
+                        session.sessionCreationPolicy(
+                                SessionCreationPolicy.STATELESS
+                        )
                 )
 
+                // Configurar los permisos de los endpoints
                 .authorizeHttpRequests(auth -> auth
 
-                        // Swagger
+                        // Permitir solicitudes CORS preflight
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+
+                        // Permitir acceder a Swagger
                         .requestMatchers(
                                 "/swagger-ui/**",
                                 "/swagger-ui.html",
                                 "/v3/api-docs/**"
                         ).permitAll()
 
-                        // Consultar productos: público
+                        // Consultar productos: acceso público
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/v1/productos",
                                 "/api/v1/productos/**"
                         ).permitAll()
 
-                        // Registrar productos
+                        // Registrar productos: vendedor o administrador
                         .requestMatchers(
                                 HttpMethod.POST,
                                 "/api/v1/productos"
                         ).hasAnyRole("VENDEDOR", "ADMINISTRADOR")
 
-                        // Actualizar productos
+                        // Actualizar productos: vendedor o administrador
                         .requestMatchers(
                                 HttpMethod.PUT,
                                 "/api/v1/productos/*"
                         ).hasAnyRole("VENDEDOR", "ADMINISTRADOR")
 
-                        // Eliminar productos
+                        // Eliminar productos: solo administrador
                         .requestMatchers(
                                 HttpMethod.DELETE,
                                 "/api/v1/productos/*"
                         ).hasRole("ADMINISTRADOR")
 
-                        // Cualquier otra ruta requiere autenticación
-                        .anyRequest().authenticated()
+                        // Bloquear cualquier otra ruta
+                        .anyRequest().denyAll()
                 )
 
+                // Responder 401 si falta autenticación
                 .exceptionHandling(ex -> ex
-
-                        .authenticationEntryPoint((request, response, exception) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_UNAUTHORIZED,
-                                    "Debes iniciar sesión para acceder a este recurso"
-                            );
-                        })
-
-                        .accessDeniedHandler((request, response, exception) -> {
-                            response.sendError(
-                                    HttpServletResponse.SC_FORBIDDEN,
-                                    "No tienes permisos para realizar esta operación"
-                            );
-                        })
+                        .authenticationEntryPoint(
+                                new HttpStatusEntryPoint(
+                                        HttpStatus.UNAUTHORIZED
+                                )
+                        )
                 )
 
+                // Ejecutar nuestro filtro JWT
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
-                );
+                )
 
-        return http.build();
+                .build();
     }
 
+    // Configuración CORS para React
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
 
