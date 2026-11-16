@@ -1,13 +1,13 @@
-package com.example.ms_productos;
+package com.example.ms_producto;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MsProductosApplication {
+public class MsProductoApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MsProductosApplication.class, args);
+		SpringApplication.run(MsProductoApplication.class, args);
 	}
 
 }
