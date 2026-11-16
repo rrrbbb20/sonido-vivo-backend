@@ -129,6 +129,32 @@ public class ProductoService {
                         "No se encontró el producto con ID: " + id
                 ));
     }
+    // Descontar stock al confirmar una compra
+    @Transactional
+    public void restarStock(Long id, Integer cantidad) {
+
+        log.info("Descontando {} unidades del producto con ID: {}",
+                cantidad, id);
+
+        if (cantidad == null || cantidad <= 0) {
+            throw new IllegalArgumentException(
+                    "La cantidad debe ser mayor que cero"
+            );
+        }
+
+        int filasAfectadas = productoRepository.restarStock(id, cantidad);
+
+        if (filasAfectadas == 0) {
+            log.warn("No se pudo descontar stock del producto con ID: {}", id);
+
+            throw new IllegalStateException(
+                    "No se pudo descontar el stock. Producto inexistente o stock insuficiente"
+            );
+        }
+
+        log.info("Stock descontado correctamente. Producto ID: {}, cantidad: {}",
+                id, cantidad);
+    }
 
     // Copiar los datos del Request a la entidad
     private void copiarDatos(Producto producto, ProductoRequest request) {
@@ -158,4 +184,6 @@ public class ProductoService {
                 .imagen(producto.getImagen())
                 .build();
     }
+
+
 }

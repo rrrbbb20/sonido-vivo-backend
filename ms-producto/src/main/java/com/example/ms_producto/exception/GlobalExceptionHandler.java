@@ -90,4 +90,15 @@ public class GlobalExceptionHandler {
                         .message("Ocurrió un error interno del servidor")
                         .build());
     }
+    //devuelve 400 bad request
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<ApiResponse<Object>> manejarArgumentoInvalido(
+            IllegalArgumentException ex) {
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ApiResponse.<Object>builder()
+                        .success(false)
+                        .message(ex.getMessage())
+                        .build());
+    }
 }
