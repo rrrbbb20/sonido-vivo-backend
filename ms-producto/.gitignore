@@ -1,33 +1,90 @@
-HELP.md
-target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
 
-### STS ###
-.apt_generated
+# ==========================================
+# SONIDO VIVO - AUTH
+# Spring Boot 4 + Maven + Java 21
+# ==========================================
+
+# Compilacion y archivos generados
+target/
+build/
+out/
+*.class
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse / Spring Tool Suite
+.apt_generated/
 .classpath
 .factorypath
 .project
-.settings
+.settings/
 .springBeans
-.sts4-cache
+.sts4-cache/
 
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
 /nbdist/
 /.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
 
-### VS Code ###
+# Visual Studio Code
 .vscode/
+
+# Sistema operativo
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+log/
+
+# Variables de entorno
+.env
+.env.*
+!.env.example
+
+# Configuraciones privadas
+application-local.properties
+application-local.yml
+application-local.yaml
+application-secret.properties
+application-secrets.properties
+
+# Credenciales y certificados privados
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# Archivos temporales
+*.tmp
+*.temp
+*.bak
+*.swp
+*.swo
+*~
+
+# Reportes generados
+*.hprof
+*.dump
+coverage/
+
+# Comprimidos generados
+*.zip
+*.tar
+*.gz
+
+# Mantener Maven Wrapper
+!.mvn/wrapper/maven-wrapper.jar
+!.mvn/wrapper/maven-wrapper.properties
+!mvnw
+!mvnw.cmd
