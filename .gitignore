@@ -1,24 +1,105 @@
-# Compiled class file
+
+# ==========================================
+# SONIDO VIVO BACKEND - GENERAL
+# ==========================================
+
+# ==========================================
+# INTELLIJ IDEA
+# ==========================================
+.idea/
+**/.idea/
+*.iml
+*.ipr
+*.iws
+
+# ==========================================
+# VISUAL STUDIO CODE
+# ==========================================
+.vscode/
+**/.vscode/
+
+# ==========================================
+# SISTEMA OPERATIVO
+# ==========================================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==========================================
+# MAVEN Y JAVA
+# ==========================================
+target/
+**/target/
 *.class
 
-# Log file
+# Archivos temporales de Maven
+dependency-reduced-pom.xml
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+release.properties
+
+# ==========================================
+# ECLIPSE / SPRING TOOL SUITE
+# ==========================================
+.settings/
+.project
+.classpath
+.factorypath
+.springBeans
+
+# ==========================================
+# VARIABLES DE ENTORNO
+# ==========================================
+.env
+.env.*
+!.env.example
+
+# ==========================================
+# CREDENCIALES Y CERTIFICADOS PRIVADOS
+# ==========================================
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+
+# ==========================================
+# CONFIGURACIONES LOCALES SPRING BOOT
+# ==========================================
+**/application-local.properties
+**/application-secret.properties
+**/application-local.yml
+**/application-secret.yml
+**/application-local.yaml
+**/application-secret.yaml
+
+# ==========================================
+# LOGS
+# ==========================================
 *.log
+logs/
+**/logs/
 
-# BlueJ files
-*.ctxt
+# ==========================================
+# PRUEBAS Y COBERTURA
+# ==========================================
+**/surefire-reports/
+**/failsafe-reports/
+**/coverage/
 
-# Mobile Tools for Java (J2ME)
-.mtj.tmp/
+# ==========================================
+# ARCHIVOS TEMPORALES
+# ==========================================
+*.tmp
+*.temp
+*.bak
+*.swp
 
-# Package Files #
-*.jar
-*.war
-*.nar
-*.ear
+# ==========================================
+# BACKUPS Y ARCHIVOS COMPRIMIDOS
+# ==========================================
 *.zip
-*.tar.gz
 *.rar
-
-# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
-hs_err_pid*
-replay_pid*
+*.7z
