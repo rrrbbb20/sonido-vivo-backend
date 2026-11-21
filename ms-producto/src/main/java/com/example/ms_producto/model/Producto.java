@@ -18,7 +18,7 @@ public class Producto {
     @Column(nullable = false, length = 100)
     private String categoria;
 
-    @Column(nullable = false, length = 150)
+    @Column(nullable = false, length = 200)
     private String nombre;
 
     @Column(nullable = false, length = 100)
@@ -36,6 +36,6 @@ public class Producto {
     @Column(nullable = false)
     private Integer stock;
 
-    @Column(length = 500)
+
     private String imagen;
 }
