@@ -9,7 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "clientes")
+@Table(name = "cliente")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,19 +22,18 @@ public class Cliente {
     @Column(name = "usuario_id", nullable = false, unique = true)
     private Long usuarioId;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 100)
     private String nombre;
 
-    @Column(nullable = false, length = 80)
+    @Column(nullable = false, length = 100)
     private String apellido;
 
     @Column(nullable = false, unique = true, length = 12)
     private String rut;
 
-    @Column(nullable = false, length = 15)
+    @Column(nullable = false, length = 9)
     private String telefono;
 
-    @CreationTimestamp
-    @Column(name = "fecha_registro", updatable = false)
+    @Column(name = "fecha_registro",nullable = false)
     private LocalDateTime fechaRegistro;
 }
