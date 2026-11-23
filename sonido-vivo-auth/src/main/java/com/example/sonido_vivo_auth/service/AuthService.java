@@ -1,3 +1,4 @@
+
 package com.example.sonido_vivo_auth.service;
 
 import com.example.sonido_vivo_auth.dto.*;
@@ -27,6 +28,7 @@ public class AuthService {
         }
 
         return new LoginResponse(
+                usuario.getId(),
                 jwt.generar(usuario),
                 usuario.getCorreo(),
                 usuario.getRol().name()
@@ -46,6 +48,7 @@ public class AuthService {
         Usuario guardado = usuariosRepo.save(usuario);
 
         return new LoginResponse(
+                guardado.getId(),
                 jwt.generar(guardado),
                 guardado.getCorreo(),
                 guardado.getRol().name()
@@ -69,6 +72,7 @@ public class AuthService {
         Usuario guardado = usuariosRepo.save(trabajador);
 
         return new LoginResponse(
+                guardado.getId(),
                 null, // No devolvemos token porque el admin está creando la cuenta para un tercero
                 guardado.getCorreo(),
                 guardado.getRol().name()
