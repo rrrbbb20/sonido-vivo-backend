@@ -49,13 +49,16 @@ public class PedidoService {
     }
 
     @Transactional
-    public Pedido crear(PedidoRequest request) {
+    public Pedido crear(
+            PedidoRequest request,
+            String authorizationHeader) {
+
         if ("DESPACHO".equalsIgnoreCase(request.getTipoEntrega())
                 && (request.getDireccionEntrega() == null
                 || request.getDireccionEntrega().isBlank())) {
             throw new ResponseStatusException(
                     HttpStatus.BAD_REQUEST,
-                    "La direccion es obligatoria para pedidos con despacho"
+                    "La dirección es obligatoria para pedidos con despacho"
             );
         }
 
@@ -86,7 +89,7 @@ public class PedidoService {
             if (producto.getPrecio() == null || producto.getPrecio() <= 0) {
                 throw new ResponseStatusException(
                         HttpStatus.BAD_GATEWAY,
-                        "El producto no tiene un precio valido"
+                        "El producto no tiene un precio válido"
                 );
             }
 
@@ -99,6 +102,14 @@ public class PedidoService {
             detalle.setPrecioUnitario(producto.getPrecio());
 
             detalles.add(detalle);
+        }
+
+        for (DetallePedido detalle : detalles) {
+            productoClient.descontarStock(
+                    detalle.getProductoId(),
+                    detalle.getCantidad(),
+                    authorizationHeader
+            );
         }
 
         Pedido pedido = new Pedido();
