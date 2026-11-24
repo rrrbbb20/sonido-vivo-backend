@@ -1,4 +1,3 @@
-
 package com.example.ms_producto.config;
 
 import com.example.ms_producto.security.JwtAuthenticationFilter;
@@ -58,6 +57,12 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/v1/productos"
                         ).hasAnyRole("VENDEDOR", "ADMINISTRADOR")
+
+                        // Descontar stock al confirmar compra: cualquier usuario autenticado
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/v1/productos/*/descontar-stock"
+                        ).authenticated()
 
                         // Actualizar productos: vendedor o administrador
                         .requestMatchers(
