@@ -1,6 +1,6 @@
-package com.example.sonido_vivo_cliente.config;
+package com.example.sonido_vivo_auth.config;
 
-import com.example.sonido_vivo_cliente.security.JwtAuthenticationFilter;
+import com.example.sonido_vivo_auth.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
@@ -24,6 +26,11 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -42,21 +49,13 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 HttpMethod.POST,
-                                "/api/v1/clientes/registro"
+                                "/api/v1/auth/login",
+                                "/api/v1/auth/registro"
                         ).permitAll()
                         .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/v1/clientes"
+                                HttpMethod.POST,
+                                "/api/v1/auth/trabajadores"
                         ).hasRole("ADMINISTRADOR")
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/v1/clientes/*",
-                                "/api/v1/clientes/usuario/*"
-                        ).authenticated()
-                        .requestMatchers(
-                                HttpMethod.PUT,
-                                "/api/v1/clientes/*"
-                        ).authenticated()
                         .anyRequest().denyAll()
                 )
                 .exceptionHandling(ex -> ex
