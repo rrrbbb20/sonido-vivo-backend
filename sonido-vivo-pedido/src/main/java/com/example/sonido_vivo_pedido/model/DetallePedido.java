@@ -14,8 +14,9 @@ public class DetallePedido {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "pedido_id", nullable = false)
-    private Long pedidoId;
+    @ManyToOne
+    @JoinColumn(name = "pedido_id", nullable = false)
+    private Pedido pedido;
 
     @Column(name = "producto_id", nullable = false)
     private Long productoId;
