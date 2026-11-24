@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -93,7 +93,6 @@ public class ClienteController {
             )
     })
     @GetMapping
-    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<ApiResponse<List<ClienteResponse>>> listar() {
 
         List<ClienteResponse> clientes = clienteService.listar();
@@ -109,7 +108,7 @@ public class ClienteController {
 
     // =====================================================
     // 3. BUSCAR CLIENTE POR ID
-    // USUARIO AUTENTICADO
+    // PROPIETARIO O ADMINISTRADOR
     // =====================================================
 
     @Operation(
@@ -127,6 +126,10 @@ public class ClienteController {
                     description = "No autenticado o token inválido"
             ),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "403",
+                    description = "No tienes permisos para ver este perfil"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "404",
                     description = "Cliente no encontrado"
             )
@@ -138,9 +141,10 @@ public class ClienteController {
                     example = "1",
                     required = true
             )
-            @PathVariable Long id) {
+            @PathVariable Long id,
+            Authentication authentication) {
 
-        ClienteResponse cliente = clienteService.buscarPorId(id);
+        ClienteResponse cliente = clienteService.buscarPorId(id, authentication);
 
         return ResponseEntity.ok(
                 ApiResponse.<ClienteResponse>builder()
@@ -153,7 +157,7 @@ public class ClienteController {
 
     // =====================================================
     // 4. BUSCAR CLIENTE POR USUARIO ID (AUTH)
-    // USUARIO AUTENTICADO
+    // PROPIETARIO O ADMINISTRADOR
     // =====================================================
 
     @Operation(
@@ -171,6 +175,10 @@ public class ClienteController {
                     description = "No autenticado o token inválido"
             ),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "403",
+                    description = "No tienes permisos para ver este perfil"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "404",
                     description = "Perfil de cliente no encontrado"
             )
@@ -182,9 +190,10 @@ public class ClienteController {
                     example = "1",
                     required = true
             )
-            @PathVariable Long usuarioId) {
+            @PathVariable Long usuarioId,
+            Authentication authentication) {
 
-        ClienteResponse cliente = clienteService.buscarPorUsuarioId(usuarioId);
+        ClienteResponse cliente = clienteService.buscarPorUsuarioId(usuarioId, authentication);
 
         return ResponseEntity.ok(
                 ApiResponse.<ClienteResponse>builder()
@@ -197,7 +206,7 @@ public class ClienteController {
 
     // =====================================================
     // 5. ACTUALIZAR PERFIL DE CLIENTE
-    // USUARIO AUTENTICADO
+    // PROPIETARIO O ADMINISTRADOR
     // =====================================================
 
     @Operation(
@@ -219,6 +228,10 @@ public class ClienteController {
                     description = "No autenticado o token inválido"
             ),
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "403",
+                    description = "No tienes permisos para modificar este perfil"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
                     responseCode = "404",
                     description = "Cliente no encontrado"
             )
@@ -231,9 +244,10 @@ public class ClienteController {
                     required = true
             )
             @PathVariable Long id,
-            @Valid @RequestBody ActualizarClienteRequest request) {
+            @Valid @RequestBody ActualizarClienteRequest request,
+            Authentication authentication) {
 
-        ClienteResponse actualizado = clienteService.actualizar(id, request);
+        ClienteResponse actualizado = clienteService.actualizar(id, request, authentication);
 
         return ResponseEntity.ok(
                 ApiResponse.<ClienteResponse>builder()

@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
@@ -21,7 +20,6 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import java.util.List;
 
 @Configuration
-@EnableMethodSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -46,7 +44,20 @@ public class SecurityConfig {
                                 HttpMethod.POST,
                                 "/api/v1/clientes/registro"
                         ).permitAll()
-                        .anyRequest().authenticated()
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/clientes"
+                        ).hasRole("ADMINISTRADOR")
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/v1/clientes/*",
+                                "/api/v1/clientes/usuario/*"
+                        ).authenticated()
+                        .requestMatchers(
+                                HttpMethod.PUT,
+                                "/api/v1/clientes/*"
+                        ).authenticated()
+                        .anyRequest().denyAll()
                 )
                 .exceptionHandling(ex -> ex
                         .authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))

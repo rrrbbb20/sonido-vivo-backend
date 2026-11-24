@@ -36,6 +36,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 Claims claims = jwtService.validar(header.substring(7));
                 String correo = claims.getSubject();
                 String rol = claims.get("rol", String.class);
+                Number idNum = claims.get("idUsuario", Number.class);
+                Long idUsuario = (idNum != null) ? idNum.longValue() : null;
 
                 if (correo != null && !correo.isBlank()
                         && rol != null
@@ -48,6 +50,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                             null,
                             List.of(new SimpleGrantedAuthority("ROLE_" + rol))
                     );
+                    auth.setDetails(idUsuario);
                     SecurityContextHolder.getContext().setAuthentication(auth);
                 } else {
                     SecurityContextHolder.clearContext();

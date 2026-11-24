@@ -1,4 +1,3 @@
-
 package com.example.ms_producto.controller;
 
 import com.example.ms_producto.dto.ApiResponse;
@@ -342,6 +341,59 @@ public class ProductoController {
                 ApiResponse.<Object>builder()
                         .success(true)
                         .message("Producto eliminado correctamente")
+                        .build()
+        );
+    }
+
+    // =====================================================
+    // 9. DESCONTAR STOCK AL CONFIRMAR COMPRA
+    // USUARIO AUTENTICADO
+    // =====================================================
+
+    @Operation(
+            summary = "Descontar stock de un producto",
+            description = "Resta una cantidad del stock disponible de un producto al confirmar un pedido."
+    )
+    @SecurityRequirement(name = "bearerAuth")
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "Stock descontado correctamente"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "Cantidad inválida"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "401",
+                    description = "No autenticado o token inválido"
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "409",
+                    description = "Producto inexistente o stock insuficiente"
+            )
+    })
+    @PutMapping("/{id}/descontar-stock")
+    public ResponseEntity<ApiResponse<Object>> restarStock(
+            @Parameter(
+                    description = "ID del producto",
+                    example = "1",
+                    required = true
+            )
+            @PathVariable Long id,
+            @Parameter(
+                    description = "Cantidad de unidades a descontar",
+                    example = "2",
+                    required = true
+            )
+            @RequestParam Integer cantidad) {
+
+        productoService.restarStock(id, cantidad);
+
+        return ResponseEntity.ok(
+                ApiResponse.<Object>builder()
+                        .success(true)
+                        .message("Stock descontado correctamente")
                         .build()
         );
     }
