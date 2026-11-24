@@ -1,9 +1,15 @@
 package com.example.sonido_vivo_pedido.controller;
 
+import com.example.sonido_vivo_pedido.dto.PedidoRequest;
 import com.example.sonido_vivo_pedido.model.Pedido;
 import com.example.sonido_vivo_pedido.service.PedidoService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,5 +33,16 @@ public class PedidoController {
     @GetMapping("/{id}")
     public Pedido buscarPorId(@PathVariable Long id) {
         return service.buscarPorId(id);
+    }
+
+    @PostMapping
+    public ResponseEntity<Pedido> crear(
+            @Valid @RequestBody PedidoRequest request) {
+
+        Pedido pedidoCreado = service.crear(request);
+
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(pedidoCreado);
     }
 }
