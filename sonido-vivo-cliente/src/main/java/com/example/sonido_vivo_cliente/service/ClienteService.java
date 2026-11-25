@@ -23,7 +23,7 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final AuthClient authClient;
 
-    // Registrar un nuevo cliente (orquesta Auth + BD Clientes)
+    // Registrar un nuevo cliente Auth + BD Clientes
     @Transactional
     public ClienteRegistroResponse registrar(ClienteRegistroRequest request) {
         String rutLimpio = request.getRut().trim().toUpperCase();
