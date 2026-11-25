@@ -30,10 +30,10 @@ public class ClienteController {
 
     private final ClienteService clienteService;
 
-    // =====================================================
+
     // 1. REGISTRAR NUEVO CLIENTE
     // ACCESO PÚBLICO
-    // =====================================================
+
 
     @Operation(
             summary = "Registrar nuevo cliente",
@@ -68,10 +68,10 @@ public class ClienteController {
         );
     }
 
-    // =====================================================
+
     // 2. LISTAR TODOS LOS CLIENTES
     // SOLO ADMINISTRADOR
-    // =====================================================
+
 
     @Operation(
             summary = "Listar todos los clientes",
@@ -106,10 +106,10 @@ public class ClienteController {
         );
     }
 
-    // =====================================================
+
     // 3. BUSCAR CLIENTE POR ID
     // PROPIETARIO O ADMINISTRADOR
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar cliente por ID",
@@ -155,10 +155,10 @@ public class ClienteController {
         );
     }
 
-    // =====================================================
+
     // 4. BUSCAR CLIENTE POR USUARIO ID (AUTH)
     // PROPIETARIO O ADMINISTRADOR
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar cliente por ID de usuario",
@@ -204,10 +204,10 @@ public class ClienteController {
         );
     }
 
-    // =====================================================
+
     // 5. ACTUALIZAR PERFIL DE CLIENTE
     // PROPIETARIO O ADMINISTRADOR
-    // =====================================================
+
 
     @Operation(
             summary = "Actualizar datos del cliente",
