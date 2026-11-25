@@ -31,9 +31,9 @@ public class ProductoController {
 
     private final ProductoService productoService;
 
-    // =====================================================
+
     // 1. LISTAR TODOS LOS PRODUCTOS
-    // =====================================================
+
 
     @Operation(
             summary = "Listar todos los productos",
@@ -59,9 +59,9 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 2. BUSCAR PRODUCTO POR ID
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar producto por ID",
@@ -97,9 +97,9 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 3. BUSCAR PRODUCTOS POR CATEGORIA
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar productos por categoría",
@@ -132,9 +132,9 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 4. BUSCAR PRODUCTOS POR MARCA
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar productos por marca",
@@ -167,9 +167,9 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 5. BUSCAR PRODUCTOS POR NOMBRE
-    // =====================================================
+
 
     @Operation(
             summary = "Buscar productos por nombre",
@@ -202,10 +202,10 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 6. REGISTRAR PRODUCTO
     // VENDEDOR O ADMINISTRADOR
-    // =====================================================
+
 
     @Operation(
             summary = "Registrar un producto",
@@ -345,10 +345,10 @@ public class ProductoController {
         );
     }
 
-    // =====================================================
+
     // 9. DESCONTAR STOCK AL CONFIRMAR COMPRA
     // USUARIO AUTENTICADO
-    // =====================================================
+
 
     @Operation(
             summary = "Descontar stock de un producto",
